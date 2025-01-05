@@ -9,13 +9,48 @@ const OSIVisualization = () => {
   const [currentDetailStep, setCurrentDetailStep] = useState(null);
 
   const osiLayers = [
-    { id: 7, name: 'Application', color: 'bg-purple-600' },
-    { id: 6, name: 'Presentation', color: 'bg-indigo-600' },
-    { id: 5, name: 'Session', color: 'bg-blue-600' },
-    { id: 4, name: 'Transport', color: 'bg-green-600' },
-    { id: 3, name: 'Network', color: 'bg-yellow-600' },
-    { id: 2, name: 'Data Link', color: 'bg-orange-600' },
-    { id: 1, name: 'Physical', color: 'bg-red-600' }
+    { 
+      id: 7, 
+      name: 'Application', 
+      color: 'bg-purple-600',
+      description: 'Provides network services directly to end-users. Includes HTTP, FTP, DNS, SMTP, etc. This is where your browser and email client operate.'
+    },
+    { 
+      id: 6, 
+      name: 'Presentation', 
+      color: 'bg-indigo-600',
+      description: 'Handles data formatting, encryption, and compression. Ensures data is readable by the receiving system. Examples: SSL/TLS, JPEG, ASCII/Unicode conversion.'
+    },
+    { 
+      id: 5, 
+      name: 'Session', 
+      color: 'bg-blue-600',
+      description: 'Manages communication sessions between applications. Handles authentication, reconnection, and checkpointing. Example: NetBIOS, RPC.'
+    },
+    { 
+      id: 4, 
+      name: 'Transport', 
+      color: 'bg-green-600',
+      description: 'Ensures reliable data delivery between applications. Handles segmentation, flow control, and error correction. TCP provides reliable delivery, UDP for speed.'
+    },
+    { 
+      id: 3, 
+      name: 'Network', 
+      color: 'bg-yellow-600',
+      description: 'Routes data packets between different networks. Handles logical addressing (IP) and determines the best path for data. This is where routers operate.'
+    },
+    { 
+      id: 2, 
+      name: 'Data Link', 
+      color: 'bg-orange-600',
+      description: 'Provides reliable point-to-point delivery between directly connected nodes. Handles physical addressing (MAC), error detection. Examples: Ethernet, Wi-Fi.'
+    },
+    { 
+      id: 1, 
+      name: 'Physical', 
+      color: 'bg-red-600',
+      description: 'Transmits raw bits over physical medium. Deals with physical connections, voltage levels, cable specifications, etc. Examples: USB, Ethernet cable, fiber optics.'
+    }
   ];
 
   const detailedSteps = [
@@ -57,28 +92,35 @@ const OSIVisualization = () => {
         { id: '4a', name: 'Local DNS Cache', description: 'Browser checks local DNS cache' },
         { id: '4b', name: 'Recursive DNS', description: 'Query sent to recursive DNS resolver (ISP/8.8.8.8)' },
         { id: '4c', name: 'Root NS Query', description: 'Resolver queries root nameservers for TLD servers' },
-        { id: '4d', name: 'TLD NS Query', description: 'TLD nameservers queried for authoritative nameservers' },
-        { id: '4e', name: 'Auth NS Query', description: 'Authoritative nameservers return final IP address' }
+        { id: '4d', name: 'TLD Resolution', description: 'Different handling based on TLD:' },
+        { id: '4d1', name: '.com/.net/.org', description: 'Standard resolution through VeriSign/registry operators' },
+        { id: '4d2', name: '.gov', description: 'Restricted TLD, managed by US GSA with additional security requirements' },
+        { id: '4d3', name: '.in/.us/.uk', description: 'Country-code TLDs with local registry policies and sometimes local presence requirements' },
+        { id: '4d4', name: 'Special TLDs', description: '.edu (US education), .mil (US military), .int (international treaties) have strict registration requirements' },
+        { id: '4e', name: 'Registry Process', description: 'TLD registry forwards to correct authoritative nameservers based on domain registration' },
+        { id: '4f', name: 'Auth NS Query', description: 'Authoritative nameservers return final IP address' }
       ]
     },
     {
       id: 5,
-      category: 'Network Connection',
-      icon: Network,
+      category: 'CDN & Security',
+      icon: Cloud,
       steps: [
-        { id: '5a', name: 'TCP Handshake', description: 'Client initiates TCP 3-way handshake with server' },
-        { id: '5b', name: 'TLS Setup', description: 'TLS negotiation for HTTPS encryption' }
+        { id: '5a', name: 'Initial Connection', description: 'DNS resolution points to nearest Cloudflare edge server' },
+        { id: '5b', name: 'TCP Connection to CDN', description: 'Client establishes connection with Cloudflare edge' },
+        { id: '5c', name: 'TLS Handshake', description: 'SSL/TLS negotiation with Cloudflare (using their SSL cert)' },
+        { id: '5d', name: 'DDoS Protection', description: 'Traffic analyzed for DDoS patterns' },
+        { id: '5e', name: 'WAF Rules', description: 'Web Application Firewall checks request against security rules' },
+        { id: '5f', name: 'Cache Check', description: 'CDN checks if content is cached at edge' }
       ]
     },
     {
       id: 6,
-      category: 'CDN & Security',
-      icon: Cloud,
+      category: 'Origin Connection',
+      icon: Network,
       steps: [
-        { id: '6a', name: 'Cloudflare Edge', description: 'Request hits nearest Cloudflare edge server' },
-        { id: '6b', name: 'DDoS Protection', description: 'Traffic analyzed for DDoS patterns' },
-        { id: '6c', name: 'WAF Rules', description: 'Web Application Firewall checks request against security rules' },
-        { id: '6d', name: 'Cache Check', description: 'CDN checks if content is cached at edge' }
+        { id: '6a', name: 'Origin TCP Handshake', description: 'If not cached, Cloudflare initiates connection to origin server' },
+        { id: '6b', name: 'Origin TLS Setup', description: 'Secure connection established between Cloudflare and origin' }
       ]
     },
     {
@@ -88,7 +130,7 @@ const OSIVisualization = () => {
       steps: [
         { id: '7a', name: 'Load Balancer', description: 'Request distributed across server pool' },
         { id: '7b', name: 'Application Server', description: 'Web server processes request' },
-        { id: '7c', name: 'Response Journey', description: 'Response travels back through CDN to user' }
+        { id: '7c', name: 'Response Journey', description: 'Response travels back through CDN to user, possibly being cached' }
       ]
     }
   ];
@@ -157,7 +199,7 @@ const OSIVisualization = () => {
                 {osiLayers.map((layer) => (
                   <div
                     key={layer.id}
-                    className={`p-4 rounded-lg transition-all duration-300 transform ${
+                    className={`p-4 rounded-lg transition-all duration-300 transform group relative ${
                       activeOSILayers.includes(layer.id)
                         ? `${layer.color} text-white scale-105`
                         : 'bg-gray-100 hover:bg-gray-200'
@@ -166,6 +208,10 @@ const OSIVisualization = () => {
                     <span className="font-medium text-lg">
                       {layer.id}. {layer.name}
                     </span>
+                    {/* Tooltip */}
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute left-full top-0 ml-2 p-2 bg-gray-900 text-white text-sm rounded-lg w-64 z-10 pointer-events-none">
+                      {layer.description}
+                    </div>
                   </div>
                 ))}
               </div>
