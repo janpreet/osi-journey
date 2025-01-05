@@ -8,49 +8,50 @@ const OSIVisualization = () => {
   const [activeOSILayers, setActiveOSILayers] = useState([]);
   const [currentDetailStep, setCurrentDetailStep] = useState(null);
 
-  const osiLayers = [
-    { 
-      id: 7, 
-      name: 'Application', 
-      color: 'bg-purple-600',
-      description: 'Provides network services directly to end-users. Includes HTTP, FTP, DNS, SMTP, etc. This is where your browser and email client operate.'
-    },
-    { 
-      id: 6, 
-      name: 'Presentation', 
-      color: 'bg-indigo-600',
-      description: 'Handles data formatting, encryption, and compression. Ensures data is readable by the receiving system. Examples: SSL/TLS, JPEG, ASCII/Unicode conversion.'
-    },
-    { 
-      id: 5, 
-      name: 'Session', 
-      color: 'bg-blue-600',
-      description: 'Manages communication sessions between applications. Handles authentication, reconnection, and checkpointing. Example: NetBIOS, RPC.'
-    },
-    { 
-      id: 4, 
-      name: 'Transport', 
-      color: 'bg-green-600',
-      description: 'Ensures reliable data delivery between applications. Handles segmentation, flow control, and error correction. TCP provides reliable delivery, UDP for speed.'
-    },
-    { 
-      id: 3, 
-      name: 'Network', 
-      color: 'bg-yellow-600',
-      description: 'Routes data packets between different networks. Handles logical addressing (IP) and determines the best path for data. This is where routers operate.'
-    },
-    { 
-      id: 2, 
-      name: 'Data Link', 
-      color: 'bg-orange-600',
-      description: 'Provides reliable point-to-point delivery between directly connected nodes. Handles physical addressing (MAC), error detection. Examples: Ethernet, Wi-Fi.'
-    },
-    { 
-      id: 1, 
-      name: 'Physical', 
-      color: 'bg-red-600',
-      description: 'Transmits raw bits over physical medium. Deals with physical connections, voltage levels, cable specifications, etc. Examples: USB, Ethernet cable, fiber optics.'
+  const layerColors = {
+    7: 'bg-purple-600',
+    6: 'bg-indigo-600',
+    5: 'bg-blue-600',
+    4: 'bg-green-600',
+    3: 'bg-yellow-600',
+    2: 'bg-orange-600',
+    1: 'bg-red-600'
+  };
+
+  const stepToLayers = {
+    'Physical Input': [1],
+    'Input Processing': [2],
+    'OS & Browser': [7],
+    'DNS Resolution': [7],
+    'CDN & Security': [7, 6, 5, 4, 3],
+    'Origin Connection': [4, 3],
+    'Origin Server': [7]
+  };
+
+  const getBorderStyle = (stepCategory) => {
+    const layers = stepToLayers[stepCategory];
+    if (!layers || layers.length === 0) return '';
+    
+    if (layers.length === 1) {
+      const colorClass = layerColors[layers[0]].replace('bg-', 'border-');
+      return `border-l-4 ${colorClass}`;
+    } else {
+      const colors = layers.map(layer => {
+        const color = layerColors[layer].replace('bg-', '').replace('-600', '');
+        return color;
+      }).join(',');
+      return `border-l-4 border-gradient-${colors}`;
     }
+  };
+
+  const osiLayers = [
+    { id: 7, name: 'Application', color: 'bg-purple-600', description: 'Provides network services directly to end-users. Includes HTTP, FTP, DNS, SMTP, etc. This is where your browser and email client operate.' },
+    { id: 6, name: 'Presentation', color: 'bg-indigo-600', description: 'Handles data formatting, encryption, and compression. Ensures data is readable by the receiving system. Examples: SSL/TLS, JPEG, ASCII/Unicode conversion.' },
+    { id: 5, name: 'Session', color: 'bg-blue-600', description: 'Manages communication sessions between applications. Handles authentication, reconnection, and checkpointing. Example: NetBIOS, RPC.' },
+    { id: 4, name: 'Transport', color: 'bg-green-600', description: 'Ensures reliable data delivery between applications. Handles segmentation, flow control, and error correction. TCP provides reliable delivery, UDP for speed.' },
+    { id: 3, name: 'Network', color: 'bg-yellow-600', description: 'Routes data packets between different networks. Handles logical addressing (IP) and determines the best path for data. This is where routers operate.' },
+    { id: 2, name: 'Data Link', color: 'bg-orange-600', description: 'Provides reliable point-to-point delivery between directly connected nodes. Handles physical addressing (MAC), error detection. Examples: Ethernet, Wi-Fi.' },
+    { id: 1, name: 'Physical', color: 'bg-red-600', description: 'Transmits raw bits over physical medium. Deals with physical connections, voltage levels, cable specifications, etc. Examples: USB, Ethernet cable, fiber optics.' }
   ];
 
   const detailedSteps = [
@@ -179,9 +180,7 @@ const OSIVisualization = () => {
       <div className="max-w-6xl mx-auto">
         <Card className="p-6 shadow-lg">
           <div className="mb-8">
-            <label className="block text-xl font-semibold mb-2 text-gray-800">
-              Enter a web address:
-            </label>
+            <label className="block text-xl font-semibold mb-2 text-gray-800">Enter a web address:</label>
             <input
               type="text"
               value={inputValue}
@@ -192,7 +191,6 @@ const OSIVisualization = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* OSI Model Layers */}
             <div>
               <h3 className="text-xl font-bold mb-4 text-gray-800">OSI Model Layers</h3>
               <div className="space-y-2">
@@ -205,18 +203,15 @@ const OSIVisualization = () => {
                         : 'bg-gray-100 hover:bg-gray-200'
                     }`}
                   >
-                    <span className="font-medium text-lg">
-                      {layer.id}. {layer.name}
-                    </span>
-                    {/* Tooltip */}
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute left-full top-1/2 ml-2 -translate-y-1/2 p-3 bg-gray-900 text-white text-sm rounded-lg w-72 z-50 pointer-events-none shadow-xl">                      {layer.description}
+                    <span className="font-medium text-lg">{layer.id}. {layer.name}</span>
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute left-full top-1/2 ml-2 -translate-y-1/2 p-3 bg-gray-900 text-white text-sm rounded-lg w-72 z-50 pointer-events-none shadow-xl">
+                      {layer.description}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Journey Steps */}
             <div>
               <h3 className="text-xl font-bold mb-4 text-gray-800">Journey Steps</h3>
               <div className="space-y-3">
@@ -227,7 +222,7 @@ const OSIVisualization = () => {
                       activeSteps.includes(category.id)
                         ? 'bg-blue-100 transform scale-105'
                         : 'bg-gray-100 hover:bg-gray-200'
-                    }`}
+                    } ${getBorderStyle(category.category)}`}
                     onClick={() => setCurrentDetailStep(
                       currentDetailStep === category.id ? null : category.id
                     )}
@@ -245,7 +240,6 @@ const OSIVisualization = () => {
               </div>
             </div>
 
-            {/* Detailed Steps */}
             <div>
               <h3 className="text-xl font-bold mb-4 text-gray-800">Detailed Steps</h3>
               <div className="space-y-3">
