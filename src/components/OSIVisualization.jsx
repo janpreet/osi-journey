@@ -28,22 +28,6 @@ const OSIVisualization = () => {
     'Origin Server': [7]
   };
 
-  const getBorderStyle = (stepCategory) => {
-    const layers = stepToLayers[stepCategory];
-    if (!layers || layers.length === 0) return '';
-    
-    if (layers.length === 1) {
-      const colorClass = layerColors[layers[0]].replace('bg-', 'border-');
-      return `border-l-4 ${colorClass}`;
-    } else {
-      const colors = layers.map(layer => {
-        const color = layerColors[layer].replace('bg-', '').replace('-600', '');
-        return color;
-      }).join(',');
-      return `border-l-4 border-gradient-${colors}`;
-    }
-  };
-
   const osiLayers = [
     { id: 7, name: 'Application', color: 'bg-purple-600', description: 'Provides network services directly to end-users. Includes HTTP, FTP, DNS, SMTP, etc. This is where your browser and email client operate.' },
     { id: 6, name: 'Presentation', color: 'bg-indigo-600', description: 'Handles data formatting, encryption, and compression. Ensures data is readable by the receiving system. Examples: SSL/TLS, JPEG, ASCII/Unicode conversion.' },
@@ -218,22 +202,35 @@ const OSIVisualization = () => {
                 {detailedSteps.map((category) => (
                   <div
                     key={category.id}
-                    className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ${
-                      activeSteps.includes(category.id)
-                        ? 'bg-blue-100 transform scale-105'
-                        : 'bg-gray-100 hover:bg-gray-200'
-                    } ${getBorderStyle(category.category)}`}
-                    onClick={() => setCurrentDetailStep(
-                      currentDetailStep === category.id ? null : category.id
-                    )}
+                    className="relative pl-6 cursor-pointer"
                   >
-                    <div className="flex items-center space-x-3">
-                      <category.icon
-                        className={`w-6 h-6 ${
-                          activeSteps.includes(category.id) ? 'text-blue-600' : 'text-gray-600'
-                        }`}
-                      />
-                      <span className="font-medium text-lg">{category.category}</span>
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-lg">
+                      {stepToLayers[category.category].map((layer, idx, arr) => (
+                        <div
+                          key={idx}
+                          style={{ height: `${100 / arr.length}%` }}
+                          className={`${layerColors[layer]}`}
+                        />
+                      ))}
+                    </div>
+                    <div
+                      className={`p-4 rounded-r-lg transition-all duration-300 ${
+                        activeSteps.includes(category.id)
+                          ? 'bg-blue-100 transform scale-105'
+                          : 'bg-gray-100 hover:bg-gray-200'
+                      }`}
+                      onClick={() => setCurrentDetailStep(
+                        currentDetailStep === category.id ? null : category.id
+                      )}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <category.icon
+                          className={`w-6 h-6 ${
+                            activeSteps.includes(category.id) ? 'text-blue-600' : 'text-gray-600'
+                          }`}
+                        />
+                        <span className="font-medium text-lg">{category.category}</span>
+                      </div>
                     </div>
                   </div>
                 ))}
