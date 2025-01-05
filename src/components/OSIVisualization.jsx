@@ -188,7 +188,7 @@ const OSIVisualization = () => {
                     }`}
                   >
                     <span className="font-medium text-lg">{layer.id}. {layer.name}</span>
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute left-full top-1/2 ml-2 -translate-y-1/2 p-3 bg-gray-900 text-white text-sm rounded-lg w-72 z-50 pointer-events-none shadow-xl">
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute left-full top-1/2 ml-2 -translate-y-1/2 p-3 bg-gray-900 text-white text-sm rounded-lg w-72 z-[9999] pointer-events-none shadow-xl" style={{ position: 'absolute', zIndex: 9999 }}>
                       {layer.description}
                     </div>
                   </div>
