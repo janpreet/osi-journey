@@ -181,14 +181,18 @@ const OSIVisualization = () => {
                 {osiLayers.map((layer) => (
                   <div
                     key={layer.id}
-                    className={`p-4 rounded-lg transition-all duration-300 transform group relative ${
-                      activeOSILayers.includes(layer.id)
-                        ? `${layer.color} text-white scale-105`
-                        : 'bg-gray-100 hover:bg-gray-200'
-                    }`}
+                    className="group relative"
                   >
-                    <span className="font-medium text-lg">{layer.id}. {layer.name}</span>
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute left-full top-1/2 ml-2 -translate-y-1/2 p-3 bg-gray-900 text-white text-sm rounded-lg w-72 z-[9999] pointer-events-none shadow-xl" style={{ position: 'absolute', zIndex: 9999 }}>
+                    <div
+                      className={`p-4 rounded-lg transition-all duration-300 transform ${
+                        activeOSILayers.includes(layer.id)
+                          ? `${layer.color} text-white scale-105`
+                          : 'bg-gray-100 hover:bg-gray-200'
+                      }`}
+                    >
+                      <span className="font-medium text-lg">{layer.id}. {layer.name}</span>
+                    </div>
+                    <div className="hidden group-hover:block absolute left-full top-1/2 ml-2 -translate-y-1/2 p-3 bg-gray-900 text-white text-sm rounded-lg w-72 pointer-events-none shadow-xl z-[999]">
                       {layer.description}
                     </div>
                   </div>
