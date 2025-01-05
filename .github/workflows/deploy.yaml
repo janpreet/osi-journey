@@ -28,9 +28,11 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-          npm install @vitejs/plugin-react --save-dev
-          npm install @types/react @types/react-dom --save-dev
-          npm install lucide-react @radix-ui/react-slot --save
+          npm install -D tailwindcss postcss autoprefixer cssnano
+          npm install -D @vitejs/plugin-react
+          npm install -D @types/react @types/react-dom
+          npm install lucide-react
+          npm install class-variance-authority clsx tailwind-merge
           
       - name: Build
         run: npm run build
