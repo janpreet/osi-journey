@@ -209,7 +209,7 @@ const OSIVisualization = () => {
                       {layer.id}. {layer.name}
                     </span>
                     {/* Tooltip */}
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute left-full top-0 ml-2 p-2 bg-gray-900 text-white text-sm rounded-lg w-64 z-10 pointer-events-none">
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity fixed transform -translate-y-1/2 left-1/3 p-3 bg-gray-900 text-white text-sm rounded-lg w-72 z-50 pointer-events-none shadow-xl">
                       {layer.description}
                     </div>
                   </div>
