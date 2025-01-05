@@ -192,7 +192,7 @@ const OSIVisualization = () => {
                     >
                       <span className="font-medium text-lg">{layer.id}. {layer.name}</span>
                     </div>
-                    <div className="hidden group-hover:block absolute left-full top-1/2 ml-2 -translate-y-1/2 p-3 bg-gray-900 text-white text-sm rounded-lg w-72 pointer-events-none shadow-xl z-[999]">
+                    <div className="hidden group-hover:block absolute md:left-full left-0 md:top-1/2 top-full md:ml-2 mt-2 md:-translate-y-1/2 p-3 bg-gray-900 text-white text-sm rounded-lg w-full md:w-72 pointer-events-none shadow-xl z-[999]">
                       {layer.description}
                     </div>
                   </div>
